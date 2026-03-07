@@ -7,7 +7,7 @@
     --sidebar-bg: #ecf0f1;
     --card-bg: #ffffff;
     --header-bg: #2c3e50;
-}
+    }
 
 body.dark-mode {
     /* Dark Mode Palette */
@@ -65,9 +65,32 @@ body {
 .card {
     background: var(--card-bg);
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
+/* Card Internal Layout */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Dynamic Trend Colors */
+.trend {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.trend-up { background-color: #d4edda; color: #155724; }
+.trend-down { background-color: #f8d7da; color: #721c24; }
+.trend-neutral { background-color: #e2e3e5; color: #383d41; }
 
 #theme-toggle {
     cursor: pointer;

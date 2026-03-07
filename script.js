@@ -35,3 +35,42 @@ async function getAddress(lat, lon, accessKey) {
 getAddress(6.6778, 3.1654, "ace75b2dfb68ee801192bc93d07d8f9a").then (address => {
     document.getElementById("address").textContent = address;
 });
+// The "Brain" function
+async function loadDashboardData() {
+    try {
+        // 1. Start the request
+        const response = await fetch('https://jsonplaceholder.typicode.com/users');
+        
+        // 2. Turn the "raw" response into a JavaScript Object (JSON)
+        const users = await response.json();
+        
+        // 3. Hand that data over to your mapping function
+        renderCards(users);
+        
+    } catch (error) {
+        console.error("The server is down!", error);
+        document.querySelector('.card-container').innerHTML = "<p>Failed to load data.</p>";
+    }
+}
+
+function renderCards(data) {
+    const container = document.querySelector('.card-container');
+    
+    const html = data.map(user => {
+        return `
+            <div class="card">
+                <div class="card-header">
+                    <h3>${user.name}</h3>
+                    <span class="trend trend-neutral">ID: ${user.id}</span>
+                </div>
+                <p class="card-value">${user.email}</p>
+                <p style="font-size: 0.8rem; color: #888;">${user.company.name}</p>
+            </div>
+        `;
+    }).join('');
+    
+    container.innerHTML = html;
+}
+
+// Start the engine!
+loadDashboardData();
