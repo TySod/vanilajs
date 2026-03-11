@@ -36,29 +36,30 @@ getAddress(6.6778, 3.1654, "ace75b2dfb68ee801192bc93d07d8f9a").then (address => 
     document.getElementById("address").textContent = address;
 });
 // The "Brain" function
+let allUsers =[];
 async function loadDashboardData() {
     try {
         // 1. Start the request
         const response = await fetch('https://jsonplaceholder.typicode.com/users');
         
         // 2. Turn the "raw" response into a JavaScript Object (JSON)
-        const users = await response.json();
+        allUsers = await response.json();
         
         // 3. Hand that data over to your mapping function
-        renderCards(users);
+        loader.style.display = 'none';
+        renderCards(allUsers);
         
     } catch (error) {
+        loader.textContent = "Failed to load data.";
         console.error("The server is down!", error);
-        document.querySelector('.card-container').innerHTML = "<p>Failed to load data.</p>";
     }
 }
 
 function renderCards(data) {
     const container = document.querySelector('.card-container');
     
-    const html = data.map(user => {
-        return `
-            <div class="card">
+    container.innerHTML = data.map(user => `
+        <div class="card">
                 <div class="card-header">
                     <h3>${user.name}</h3>
                     <span class="trend trend-neutral">ID: ${user.id}</span>
@@ -66,11 +67,20 @@ function renderCards(data) {
                 <p class="card-value">${user.email}</p>
                 <p style="font-size: 0.8rem; color: #888;">${user.company.name}</p>
             </div>
-        `;
-    }).join('');
+        `).join('');
+        const searchInput = document.getElementById('search-input');
+        searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            const filteredUsers = allUsers.filter(user => user.name.toLowerCase().includes(searchTerm));
+            renderCards(filteredUsers);
+        });
+        const clearButton = document.getElementById('clear-button');
+        clearButton.addEventListener('click', () => {
+            searchInput.value = '';
+            renderCards(allUsers);
+        });
     
-    container.innerHTML = html;
-}
+    }
 
 // Start the engine!
 loadDashboardData();
